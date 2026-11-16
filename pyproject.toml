@@ -1,0 +1,123 @@
+# Copyright (c) 2022-2026, The Isaac Lab Project Developers (https://github.com/isaac-sim/IsaacLab/blob/main/CONTRIBUTORS.md).
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+[build-system]
+requires = ["uv_build>=0.12.6,<0.13"]
+build-backend = "uv_build"
+
+[project]
+name = "isaaclab_steel_template"
+version = "0.1.0"
+description = "Isaac Lab project starter using native Newton Steel with CUDA Graph."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Patrizio Acquadro" },
+]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "isaaclab-dev",
+]
+
+[project.entry-points."isaaclab.tasks"]
+isaaclab_steel_template = "isaaclab_steel_template.tasks"
+
+[project.optional-dependencies]
+all = ["isaaclab-dev[all]"]
+dev = ["isaaclab-dev[dev]"]
+importers = ["isaaclab-dev[importers]"]
+isaacsim = ["isaaclab-dev[isaacsim]"]
+leapp = ["isaaclab-dev[leapp]"]
+mimic = ["isaaclab-dev[mimic]"]
+ov = ["isaaclab-dev[ov]"]
+ovphysx = ["isaaclab-dev[ovphysx]"]
+ovrtx = ["isaaclab-dev[ovrtx]"]
+rerun = ["isaaclab-dev[rerun]"]
+rl-games = ["isaaclab-dev[rl-games]"]
+rlinf = ["isaaclab-dev[rlinf]"]
+rsl-rl = ["isaaclab-dev[rsl-rl]"]
+sb3 = ["isaaclab-dev[sb3]"]
+skrl = ["isaaclab-dev[skrl]"]
+skrl-jax = ["isaaclab-dev[skrl-jax]"]
+teleop = ["isaaclab-dev[teleop]"]
+test = ["isaaclab-dev[test]"]
+tetrahedralization = ["isaaclab-dev[tetrahedralization]"]
+torchrl = ["isaaclab-dev[torchrl]"]
+video = ["isaaclab-dev[video]"]
+viser = ["isaaclab-dev[viser]"]
+wandb = ["isaaclab-dev[wandb]"]
+
+[dependency-groups]
+dev = ["codespell>=2.4", "pre-commit>=4.2", "pytest>=8.3", "ruff>=0.11"]
+
+[tool.uv.build-backend]
+module-name = "isaaclab_steel_template"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["isaaclab_steel_template"]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "isaaclab",
+    "isaaclab-rl",
+    "isaaclab-tasks",
+    "isaaclab-assets",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.isort.sections]
+isaaclab = ["isaaclab", "isaaclab_newton", "isaaclab_ov", "isaaclab_physx"]
+"isaaclab-rl" = ["isaaclab_rl"]
+"isaaclab-tasks" = ["isaaclab_tasks"]
+"isaaclab-assets" = ["isaaclab_assets"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401", "F403"]
+"**/__init__.pyi" = ["F401", "F403"]
+"scripts/**/*.py" = ["E402"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pyright]
+include = ["src", "scripts", "tests"]
+exclude = ["**/__pycache__", "**/logs", ".git", ".venv", ".vscode"]
+typeCheckingMode = "basic"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "unit: test exercises isolated logic and does not launch the simulator",
+    "integration: test drives the simulator/scene/environment end-to-end",
+    "smoke: tests for core installation, task, and RL functionality",
+    "kitless: test must pass inside the Kit-less container, which has no Isaac Sim runtime",
+]
+
+[tool.codespell]
+skip = "*.usd,*.usda,*.usdc,*.json,*.onnx,*.pt,*.mp4,*.data,uv.lock,logs"
+
+[[tool.uv.index]]
+url = "https://pypi.nvidia.com"
+explicit = false
+
+[[tool.uv.index]]
+name = "pypi-public"
+url = "https://pypi.org/simple"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
