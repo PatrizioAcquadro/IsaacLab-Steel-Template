@@ -30,11 +30,15 @@ GIT_LFS_SKIP_SMUDGE=1 git -C "$runtime/IsaacLab" checkout --detach "$revision"
 git -C "$runtime/IsaacLab" apply --unidiff-zero "$PWD/configs/isaac-native-numpy.patch"
 UV_PROJECT_ENVIRONMENT="$runtime/.venv" uv --directory "$runtime/IsaacLab" \
   sync --locked --python python3.12 --extra isaacsim
-uv pip check --python "$runtime/.venv/bin/python"
+UV_PROJECT_ENVIRONMENT="$runtime/.venv" uv --directory "$runtime/IsaacLab" \
+  sync --locked --check --python python3.12 --extra isaacsim
 ~~~
 
 The patch pins NumPy 2.4.6 for the Numba version already in the upstream lock.
 The `isaacsim` extra installs the Kit runtime for RTX sensors.
+The locked sync check verifies the installed environment against Isaac Lab's
+lock. Isaac Lab overrides some dependency versions declared by Kit, which
+can cause the generic `uv pip check` to report conflicts for this environment.
 
 ## Start a task
 
